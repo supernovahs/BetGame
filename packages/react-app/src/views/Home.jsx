@@ -45,7 +45,9 @@ function Home({
             const ts = date.unix();
             console.log(ts);
 
-            await tx(writeContracts["YourContract"].requestGames(ethers.utils.parseEther("0.1"), "create", 4, ts));
+            await tx(
+              writeContracts["YourContract"].requestGamesCreate(ethers.utils.parseEther("0.1"), "create", 4, ts),
+            );
             // console.log(requestgamestx);
             // console.log(requestid);
             setTimeout(() => {

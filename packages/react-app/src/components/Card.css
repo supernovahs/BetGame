@@ -1,0 +1,38 @@
+.card-wrapper {
+  border: 1px solid gray;
+  padding: 36px;
+  border-radius: 20px;
+  margin: 8px;
+}
+
+.game-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.vs {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.bet {
+  background: black;
+  color: white;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid white;
+  cursor: pointer;
+  width: 45%;
+  margin-left: 5%;
+}
+
+.betting {
+  margin-top: 10px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}

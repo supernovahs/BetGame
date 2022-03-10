@@ -2,6 +2,7 @@
 pragma solidity 0.8.7;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 /**
  * Supported `sportId`
@@ -85,8 +86,21 @@ contract YourContract is ChainlinkClient {
     GameCreate[] public gamecreate;
 
     GameResolve[] public gameresolve;
-    bytes32 public requestId;
-    bytes32 public createrequestId;
+    bytes32 public requestIdresolve;
+    bytes32 public requestIdcreate;
+    bytes32 public resultid;
+
+    struct TeamBet {
+        bytes32 GameId;
+        uint8 Team;
+        uint256 amount;
+        bool withdrawn;
+    }
+    TeamBet[] public teambet;
+
+    mapping(address => TeamBet) public ChoiceBet;
+    mapping(bytes => uint256) public GameIdtoArraylength;
+    string public aa;
 
     /* ========== CONSTRUCTOR ========== */
 
@@ -134,10 +148,10 @@ contract YourContract is ChainlinkClient {
         req.addUint("sportId", _sportId);
         req.addStringArray("statusIds", _statusIds);
         req.addStringArray("gameIds", _gameIds);
-        createrequestId = sendChainlinkRequest(req, _payment);
+        resultid = sendChainlinkRequest(req, _payment);
     }
 
-    function requestGames(
+    function requestGamesResolve(
         uint256 _payment,
         string memory _market,
         uint256 _sportId,
@@ -152,8 +166,30 @@ contract YourContract is ChainlinkClient {
         req.addUint("date", _date);
         req.add("market", _market);
         req.addUint("sportId", _sportId);
-        requestId = sendChainlinkRequest(req, _payment);
+
+        requestIdresolve = sendChainlinkRequest(req, _payment);
     }
+
+    function requestGamesCreate(
+        uint256 _payment,
+        string memory _market,
+        uint256 _sportId,
+        uint256 _date
+    ) public {
+        Chainlink.Request memory req = buildChainlinkRequest(
+            "9de17351dfa5439d83f5c2f3707ffa9e",
+            address(this),
+            this.fulfillGames.selector
+        );
+
+        req.addUint("date", _date);
+        req.add("market", _market);
+        req.addUint("sportId", _sportId);
+
+        requestIdcreate = sendChainlinkRequest(req, _payment);
+    }
+
+    //     createrequestId = sendChainlinkRequest(req, _payment);
 
     /* ========== CONSUMER FULFILL FUNCTIONS ========== */
 
@@ -175,20 +211,20 @@ contract YourContract is ChainlinkClient {
             requestIdGames[_requestId][_idx],
             (GameCreate)
         );
-        // gamecreate.push(game);
 
         return game;
     }
 
     function getGamesResolved(bytes32 _requestId, uint256 _idx)
-        external
+        public
+        view
         returns (GameResolve memory)
     {
         GameResolve memory game = abi.decode(
             requestIdGames[_requestId][_idx],
             (GameResolve)
         );
-        gameresolve.push(game);
+        // gameresolve.push(game);
         return game;
     }
 
@@ -208,5 +244,45 @@ contract YourContract is ChainlinkClient {
             linkToken.transfer(msg.sender, linkToken.balanceOf(address(this))),
             "Unable to transfer"
         );
+    }
+
+    function ChooseTeam(
+        bytes32 gameid,
+        uint8 Team,
+        uint256 _amount
+    ) public payable {
+        require(msg.value == _amount, "Not enough sent");
+        teambet.push(TeamBet(gameid, Team, _amount, false));
+        ChoiceBet[msg.sender] = teambet[teambet.length - 1];
+    }
+
+    function withdraw(bytes32 _gameid, string[] memory statusid) public {
+        string memory aa = string(abi.encodePacked(_gameid));
+        require(ChoiceBet[msg.sender].GameId == _gameid, "You did not bet ");
+        uint8 scoreHometeam = getGamesResolved(resultid, 0).homeScore;
+        uint8 scoreAwayteam = getGamesResolved(resultid, 0).awayScore;
+        if (scoreHometeam > scoreAwayteam) {
+            require(ChoiceBet[msg.sender].Team == 0);
+            require(
+                ChoiceBet[msg.sender].withdrawn == false,
+                "Already withdrawn"
+            );
+            ChoiceBet[msg.sender].withdrawn = true;
+            (bool success, ) = msg.sender.call{
+                value: ChoiceBet[msg.sender].amount
+            }("");
+            require(success, "Not able to send u money");
+        } else {
+            require(ChoiceBet[msg.sender].Team == 1);
+            require(
+                ChoiceBet[msg.sender].withdrawn == false,
+                "Already withdrawn"
+            );
+            ChoiceBet[msg.sender].withdrawn = true;
+            (bool success, ) = msg.sender.call{
+                value: ChoiceBet[msg.sender].amount
+            }("");
+            require(success, "Not able to send u money");
+        }
     }
 }
