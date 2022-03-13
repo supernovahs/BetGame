@@ -21,10 +21,31 @@ export default function ExampleUI({
     <div>
       <Button
         onClick={async () => {
-          await tx(writeContracts["YourContract"].withdraw());
+          let id = await tx(
+            readContracts["YourContract"].bytestostringconvert(
+              "0x3561356438643037623064386332646335613039363438653561623163346264",
+            ),
+          );
+          console.log(id);
+          await tx(
+            writeContracts["YourContract"].requestGamesResolveWithFilters(
+              ethers.utils.parseEther("0.1"),
+              "resolve",
+              4,
+              1647357166,
+              [],
+            ),
+          );
         }}
       >
         Get Results
+      </Button>
+      <Button
+        onClick={async () => {
+          await tx(writeContracts["YourContract"].withdraw());
+        }}
+      >
+        withdraw
       </Button>
     </div>
   );

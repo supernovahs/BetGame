@@ -251,6 +251,14 @@ contract YourContract is ChainlinkClient {
         ChoiceBet[msg.sender] = teambet[teambet.length - 1];
     }
 
+    function bytestostringconvert(bytes32 id)
+        public
+        view
+        returns (string memory)
+    {
+        return string(abi.encodePacked(id));
+    }
+
     function withdraw(bytes32 _gameid, string[] memory statusid) public {
         string memory aa = string(abi.encodePacked(_gameid));
         require(ChoiceBet[msg.sender].GameId == _gameid, "You did not bet ");
