@@ -254,6 +254,7 @@ contract YourContract is ChainlinkClient {
     function withdraw(bytes32 _gameid, string[] memory statusid) public {
         string memory aa = string(abi.encodePacked(_gameid));
         require(ChoiceBet[msg.sender].GameId == _gameid, "You did not bet ");
+
         uint8 scoreHometeam = getGamesResolved(resultid, 0).homeScore;
         uint8 scoreAwayteam = getGamesResolved(resultid, 0).awayScore;
         if (scoreHometeam > scoreAwayteam) {

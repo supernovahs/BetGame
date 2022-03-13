@@ -21,7 +21,7 @@ export default function ExampleUI({
     <div>
       <Button
         onClick={async () => {
-          await tx(writeContracts["YourContract"].withdraw(gameid, [""]));
+          await tx(writeContracts["YourContract"].withdraw());
         }}
       >
         Get Results

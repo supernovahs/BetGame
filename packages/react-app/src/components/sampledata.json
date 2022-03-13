@@ -1,0 +1,37 @@
+[
+  {
+    "date": "3/13/2022",
+    "games": [
+      {
+        "gameId": "0x3834343135366637373464646335616161373166643034636635616663323138",
+        "homeTeam": "Miami Heat",
+        "awayTeam": "Minnesota Timberwolves",
+        "time": "6:30:00 AM"
+      },
+      {
+        "gameId": "0x6332323766383665393130333362633661633164336131613663613535653765",
+        "homeTeam": "San Antonio Spurs",
+        "awayTeam": "Indiana Pacers",
+        "time": "6:30:00 AM"
+      },
+      {
+        "gameId": "0x6664333664653565366462383037616663646666663266623434383164643733",
+        "homeTeam": "Chicago Bulls",
+        "awayTeam": "Cleveland Cavaliers",
+        "time": "6:30:00 AM"
+      },
+      {
+        "gameId": "0x3135663038353632353037663235633962613938636137376231393964333263",
+        "homeTeam": "Golden State Warriors",
+        "awayTeam": "Milwaukee Bucks",
+        "time": "7:00:00 AM"
+      },
+      {
+        "gameId": "0x3033396564343338343832393735323163396135383232623839333034613438",
+        "homeTeam": "Utah Jazz",
+        "awayTeam": "Sacramento Kings",
+        "time": "7:30:00 AM"
+      }
+    ]
+  }
+]
