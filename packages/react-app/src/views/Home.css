@@ -1,0 +1,51 @@
+.selection {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: gray;
+  padding: 16px;
+  border-radius: 20px;
+  width: 70%;
+  margin: 20px auto;
+}
+
+h2 {
+  margin: 0;
+}
+
+.selection > h2 {
+  color: black;
+}
+
+.date-picker > div {
+  color: black;
+}
+
+.confirm {
+  background-color: black;
+  color: white;
+  padding: 5px 36px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+ug-head {
+  font-size: x-large;
+  font-weight: 800;
+}
+
+.game {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 70%;
+  height: 100px;
+  margin: 10px auto;
+  border: 2px solid white;
+  border-radius: 20px;
+}
+
+.game > h2 {
+  width: 200px;
+  text-align: center;
+}

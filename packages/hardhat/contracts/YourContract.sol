@@ -246,13 +246,8 @@ contract YourContract is ChainlinkClient {
         );
     }
 
-    function ChooseTeam(
-        bytes32 gameid,
-        uint8 Team,
-        uint256 _amount
-    ) public payable {
-        require(msg.value == _amount, "Not enough sent");
-        teambet.push(TeamBet(gameid, Team, _amount, false));
+    function ChooseTeam(bytes32 gameid, uint8 Team) public payable {
+        teambet.push(TeamBet(gameid, Team, msg.value, false));
         ChoiceBet[msg.sender] = teambet[teambet.length - 1];
     }
 

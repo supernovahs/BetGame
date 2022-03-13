@@ -2,3 +2,14 @@
   text-align: center;
   padding-left: calc(100vw - 100%);
 }
+
+.header {
+  font-weight: 900;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  background-color: black;
+  width: 100%;
+  color: white;
+}

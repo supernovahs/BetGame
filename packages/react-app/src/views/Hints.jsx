@@ -57,30 +57,15 @@ export default function Hints({
           // console.log(id.lengthGames[1]);
         }}
       >
-        Click
+        Get Games List
       </Button>
 
       <div style={{ margin: 16, padding: 8, display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}>
         {gameArray.map((game, index) => (
           <div key={index} className="card-wrapper">
-            <Card game={game} key={index} />
+            <Card game={game} key={index} price={price} />
           </div>
         ))}
-        {/* <Card title="Match 1">
-          <div style={{ padding: 8 }}>
-            <Row>
-              {/* <Col span={8}>{lengthGames}</Col> */}
-        {/* <Col span={8} offset={8}>
-                AwayTeam
-              </Col> */}
-        {/* </Row>
-          </div>
-        </Card>
-        <Card />
-        <Card />
-        <Card />
-        <Card />
-        // <Card /> */}{" "}
       </div>
     </div>
   );

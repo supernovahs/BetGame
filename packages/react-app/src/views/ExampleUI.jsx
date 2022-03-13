@@ -21,17 +21,7 @@ export default function ExampleUI({
     <div>
       <Button
         onClick={async () => {
-          const a = await tx(
-            writeContracts["YourContract"].updateResult(ethers.utils.parseEther("0.1"), "resolve", 4, 1646764789),
-          );
-          console.log(a);
-
-          const id = await tx(readContracts["YourContract"].requestIdresolve());
-          console.log(id);
-          for (let i = 0; i < 3; i++) {
-            const res = await tx(readContracts["YourContract"].getGamesResolved(id, i));
-            console.log(res);
-          }
+          await tx(writeContracts["YourContract"].withdraw(gameid, [""]));
         }}
       >
         Get Results
