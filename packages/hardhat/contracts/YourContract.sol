@@ -82,18 +82,6 @@ contract YourContract is ChainlinkClient {
         uint8 awayScore;
         uint8 statusId;
     }
-    /* Array **/
-    GameCreate[] public gamecreate;
-    GameResolve[] public gameresolve;
-
-    /*Variables **/
-    bytes32 public requestIdresolve;
-    bytes32 public requestIdcreate;
-    bytes32 public resultid;
-    uint256 private payment;
-
-    address public admin;
-    bytes32 public jobId;
 
     struct TeamBet {
         bytes32 GameId;
@@ -101,31 +89,43 @@ contract YourContract is ChainlinkClient {
         uint256 amount;
         bool withdrawn;
     }
+
+    /* Array **/
+    GameCreate[] public gamecreate;
+    GameResolve[] public gameresolve;
     TeamBet[] public teambet;
 
-    mapping(address => TeamBet) public ChoiceBet;
-    mapping(bytes => uint256) public GameIdtoArraylength;
+    /*Variables **/
+    bytes32 public requestIdresolve;
+    bytes32 public requestIdcreate;
+    bytes32 public resultid;
+    uint256 private payment;
+    address public admin;
+    bytes32 public jobId;
     string public aa;
 
-    /* ========== CONSTRUCTOR ========== */
-
-    /**
-     * @param _link the LINK token address.
-     * @param _oracle the Operator.sol contract address.
-     */
-    constructor(address _link, address _oracle) {
-        setChainlinkToken(_link);
-        setChainlinkOracle(_oracle);
-        admin = msg.sender;
-    }
-
-    // Maps <RequestId, Result>
-    mapping(bytes32 => bytes[]) public requestIdGames;
+    /* Mappings **/
+    mapping(address => TeamBet) public ChoiceBet;
+    mapping(bytes => uint256) public GameIdtoArraylength;
+    mapping(bytes32 => bytes[]) public requestIdGames; /* Request to result array **/
 
     /* Only Owner modifier **/
     modifier onlyOwner() {
         require(msg.sender == admin, "Not Owner");
         _;
+    }
+
+    /* =================== Constructor ===================**/
+
+    /**
+     * @param _link the LINK token address.
+     * @param _oracle the Operator.sol contract address.
+     */
+
+    constructor(address _link, address _oracle) {
+        setChainlinkToken(_link);
+        setChainlinkOracle(_oracle);
+        admin = msg.sender;
     }
 
     /* Set functions **/
@@ -135,6 +135,19 @@ contract YourContract is ChainlinkClient {
 
     function setJobId(bytes32 _jobid) internal onlyOwner {
         jobId = _jobid;
+    }
+
+    /* =====================View Functions===================== **/
+    function bytestostringconvert(bytes32 id)
+        public
+        view
+        returns (string memory)
+    {
+        return string(abi.encodePacked(id));
+    }
+
+    function getOracleAddress() external view returns (address) {
+        return chainlinkOracleAddress();
     }
 
     /* ========== CONSUMER REQUEST FUNCTIONS ========== */
@@ -238,19 +251,14 @@ contract YourContract is ChainlinkClient {
             requestIdGames[_requestId][_idx],
             (GameResolve)
         );
-        // gameresolve.push(game);
         return game;
     }
 
-    function getOracleAddress() external view returns (address) {
-        return chainlinkOracleAddress();
-    }
-
-    function setOracle(address _oracle) external {
+    function setOracle(address _oracle) external onlyOwner {
         setChainlinkOracle(_oracle);
     }
 
-    function withdrawLink() public {
+    function withdrawLink() public onlyOwner {
         LinkTokenInterface linkToken = LinkTokenInterface(
             chainlinkTokenAddress()
         );
@@ -263,14 +271,6 @@ contract YourContract is ChainlinkClient {
     function ChooseTeam(bytes32 gameid, uint8 Team) public payable {
         teambet.push(TeamBet(gameid, Team, msg.value, false));
         ChoiceBet[msg.sender] = teambet[teambet.length - 1];
-    }
-
-    function bytestostringconvert(bytes32 id)
-        public
-        view
-        returns (string memory)
-    {
-        return string(abi.encodePacked(id));
     }
 
     function withdraw(bytes32 _gameid, string[] memory statusid) public {
