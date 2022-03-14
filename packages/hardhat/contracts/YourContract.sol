@@ -205,8 +205,6 @@ contract YourContract is ChainlinkClient {
         requestIdcreate = sendChainlinkRequest(req, payment);
     }
 
-    //     createrequestId = sendChainlinkRequest(req, _payment);
-
     /* ========== CONSUMER FULFILL FUNCTIONS ========== */
 
     function fulfillGames(bytes32 _requestId, bytes[] memory _games)
