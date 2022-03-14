@@ -59,12 +59,12 @@ import "@openzeppelin/contracts/utils/Strings.sol";
  */
 
 /**
- * @title A consumer contract for Therundown API.
- * @author LinkPool.
- * @dev Uses @chainlink/contracts 0.4.0.
+ * @title Real Time Sports Betting Platform powered by Chainlink.
+ * @author Supernovahs.eth
+ * @dev Currently supports id = 4(NBA).
  */
 
-contract YourContract is ChainlinkClient {
+contract NovaStars is ChainlinkClient {
     using Chainlink for Chainlink.Request;
 
     /* ========== CONSUMER STATE VARIABLES ========== */
@@ -272,6 +272,8 @@ contract YourContract is ChainlinkClient {
         teambet.push(TeamBet(gameid, Team, msg.value, false));
         ChoiceBet[msg.sender] = teambet[teambet.length - 1];
     }
+
+    /* Withdraw Function for Winners**/
 
     function withdraw(bytes32 _gameid, string[] memory statusid) public {
         string memory aa = string(abi.encodePacked(_gameid));
