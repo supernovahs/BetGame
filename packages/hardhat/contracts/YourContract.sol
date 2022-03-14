@@ -82,13 +82,18 @@ contract YourContract is ChainlinkClient {
         uint8 awayScore;
         uint8 statusId;
     }
-
+    /* Array **/
     GameCreate[] public gamecreate;
-
     GameResolve[] public gameresolve;
+
+    /*Variables **/
     bytes32 public requestIdresolve;
     bytes32 public requestIdcreate;
     bytes32 public resultid;
+    uint256 private payment;
+
+    address public admin;
+    bytes32 public jobId;
 
     struct TeamBet {
         bytes32 GameId;
@@ -111,17 +116,31 @@ contract YourContract is ChainlinkClient {
     constructor(address _link, address _oracle) {
         setChainlinkToken(_link);
         setChainlinkOracle(_oracle);
+        admin = msg.sender;
     }
 
     // Maps <RequestId, Result>
     mapping(bytes32 => bytes[]) public requestIdGames;
 
-    /* ========== CONSUMER REQUEST FUNCTIONS ========== */
+    /* Only Owner modifier **/
+    modifier onlyOwner() {
+        require(msg.sender == admin, "Not Owner");
+        _;
+    }
 
+    /* Set functions **/
+    function SetPayment(uint256 _payment) internal onlyOwner {
+        payment = _payment;
+    }
+
+    function setJobId(bytes32 _jobid) internal onlyOwner {
+        jobId = _jobid;
+    }
+
+    /* ========== CONSUMER REQUEST FUNCTIONS ========== */
     /**
      * @notice Returns games for a given date.
      * @dev Result format is array of encoded tuples.
-     * @param _payment the LINK amount in Juels (i.e. 10^18 aka 1 LINK).
      * @param _market the type of games we want to query (create or resolve).
      * @param _sportId the sportId of the sport to query.
      * @param _date the date for the games to be queried (format in epoch).
@@ -130,7 +149,6 @@ contract YourContract is ChainlinkClient {
      */
 
     function requestGamesResolveWithFilters(
-        uint256 _payment,
         string memory _market,
         uint256 _sportId,
         uint256 _date,
@@ -138,7 +156,7 @@ contract YourContract is ChainlinkClient {
         string[] memory _gameIds
     ) public {
         Chainlink.Request memory req = buildChainlinkRequest(
-            "9de17351dfa5439d83f5c2f3707ffa9e",
+            jobId,
             address(this),
             this.fulfillGames.selector
         );
@@ -148,17 +166,16 @@ contract YourContract is ChainlinkClient {
         req.addUint("sportId", _sportId);
         req.addStringArray("statusIds", _statusIds);
         req.addStringArray("gameIds", _gameIds);
-        resultid = sendChainlinkRequest(req, _payment);
+        resultid = sendChainlinkRequest(req, payment);
     }
 
     function requestGamesResolve(
-        uint256 _payment,
         string memory _market,
         uint256 _sportId,
         uint256 _date
     ) public {
         Chainlink.Request memory req = buildChainlinkRequest(
-            "9de17351dfa5439d83f5c2f3707ffa9e",
+            jobId,
             address(this),
             this.fulfillGames.selector
         );
@@ -167,17 +184,16 @@ contract YourContract is ChainlinkClient {
         req.add("market", _market);
         req.addUint("sportId", _sportId);
 
-        requestIdresolve = sendChainlinkRequest(req, _payment);
+        requestIdresolve = sendChainlinkRequest(req, payment);
     }
 
     function requestGamesCreate(
-        uint256 _payment,
         string memory _market,
         uint256 _sportId,
         uint256 _date
     ) public {
         Chainlink.Request memory req = buildChainlinkRequest(
-            "9de17351dfa5439d83f5c2f3707ffa9e",
+            jobId,
             address(this),
             this.fulfillGames.selector
         );
@@ -186,7 +202,7 @@ contract YourContract is ChainlinkClient {
         req.add("market", _market);
         req.addUint("sportId", _sportId);
 
-        requestIdcreate = sendChainlinkRequest(req, _payment);
+        requestIdcreate = sendChainlinkRequest(req, payment);
     }
 
     //     createrequestId = sendChainlinkRequest(req, _payment);
