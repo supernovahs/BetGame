@@ -90,10 +90,17 @@ contract NovaStars is ChainlinkClient {
         bool withdrawn;
     }
 
+    struct GameIdToStartTime {
+        bytes32 GameId;
+        uint256 startTime;
+        uint256 arrLength;
+    }
+
     /* Array **/
     GameCreate[] public gamecreate;
     GameResolve[] public gameresolve;
     TeamBet[] public teambet;
+    GameIdToStartTime[] public gameidtostarttime;
 
     /*Variables **/
     bytes32 public requestIdresolve;
@@ -103,6 +110,7 @@ contract NovaStars is ChainlinkClient {
     address public admin;
     bytes32 public jobId;
     string public aa;
+    uint256 public lengthgames;
 
     /* Mappings **/
     mapping(address => TeamBet) public ChoiceBet;
@@ -129,11 +137,11 @@ contract NovaStars is ChainlinkClient {
     }
 
     /* Set functions **/
-    function SetPayment(uint256 _payment) internal onlyOwner {
+    function SetPayment(uint256 _payment) external onlyOwner {
         payment = _payment;
     }
 
-    function setJobId(bytes32 _jobid) internal onlyOwner {
+    function setJobId(bytes32 _jobid) external onlyOwner {
         jobId = _jobid;
     }
 
@@ -169,7 +177,7 @@ contract NovaStars is ChainlinkClient {
         string[] memory _gameIds
     ) public {
         Chainlink.Request memory req = buildChainlinkRequest(
-            jobId,
+            "9de17351dfa5439d83f5c2f3707ffa9e",
             address(this),
             this.fulfillGames.selector
         );
@@ -188,7 +196,7 @@ contract NovaStars is ChainlinkClient {
         uint256 _date
     ) public {
         Chainlink.Request memory req = buildChainlinkRequest(
-            jobId,
+            "9de17351dfa5439d83f5c2f3707ffa9e",
             address(this),
             this.fulfillGames.selector
         );
@@ -206,7 +214,7 @@ contract NovaStars is ChainlinkClient {
         uint256 _date
     ) public {
         Chainlink.Request memory req = buildChainlinkRequest(
-            jobId,
+            "9de17351dfa5439d83f5c2f3707ffa9e",
             address(this),
             this.fulfillGames.selector
         );
@@ -225,13 +233,13 @@ contract NovaStars is ChainlinkClient {
         recordChainlinkFulfillment(_requestId)
     {
         requestIdGames[_requestId] = _games;
+        lengthgames = _games.length;
     }
 
     /* ========== OTHER FUNCTIONS ========== */
 
     function getGamesCreated(bytes32 _requestId, uint256 _idx)
-        external
-        view
+        public
         returns (GameCreate memory)
     {
         GameCreate memory game = abi.decode(
@@ -239,7 +247,13 @@ contract NovaStars is ChainlinkClient {
             (GameCreate)
         );
 
-        return game;
+        GameIdToStartTime memory Gameidtostarttime;
+        Gameidtostarttime.GameId = game.gameId;
+        Gameidtostarttime.startTime = game.startTime;
+        Gameidtostarttime.arrLength = gameidtostarttime.length;
+        gameidtostarttime.push(Gameidtostarttime);
+
+        return (game);
     }
 
     function getGamesResolved(bytes32 _requestId, uint256 _idx)

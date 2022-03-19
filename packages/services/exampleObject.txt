@@ -1,0 +1,18 @@
+[
+    "0x3065616237383865353762326266333730373131643865396337333137313237",
+    {
+        "type": "BigNumber",
+        "hex": "0x62326bf0"
+    },
+    "Cleveland Cavaliers",
+    "Philadelphia 76ers"
+]
+0: "0x3065616237383865353762326266333730373131643865396337333137313237"
+1: BigNumber {_hex: '0x62326bf0', _isBigNumber: true}
+2: "Cleveland Cavaliers"
+3: "Philadelphia 76ers"
+awayTeam: "Philadelphia 76ers"
+gameId: "0x3065616237383865353762326266333730373131643865396337333137313237"
+homeTeam: "Cleveland Cavaliers"
+startTime: BigNumber {_hex: '0x62326bf0', _isBigNumber: true}
+length: 4
